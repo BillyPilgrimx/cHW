@@ -1,0 +1,13 @@
+﻿  HW1_VadimKobrinsky.c
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(35): warning C4047: 'function': 'char **' differs in levels of indirection from 'char [30][55]'
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(35): warning C4024: 'CreateWorld': different types for formal and actual parameter 1
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(37): warning C4047: 'function': 'int **' differs in levels of indirection from 'int [8][4]'
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(37): warning C4024: 'GatherRoadInput': different types for formal and actual parameter 1
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(39): warning C4047: 'function': 'char **' differs in levels of indirection from 'char [30][55]'
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(39): warning C4024: 'BuildRoads': different types for formal and actual parameter 1
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(39): warning C4047: 'function': 'int **' differs in levels of indirection from 'int [8][4]'
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(39): warning C4024: 'BuildRoads': different types for formal and actual parameter 4
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(41): warning C4047: 'function': 'char **' differs in levels of indirection from 'char [30][55]'
+c:\users\vadim\documents\visual studio 2015\projects\hw1_vadimkobrinsky\hw1_vadimkobrinsky\hw1_vadimkobrinsky.c(41): warning C4024: 'PrintWorld': different types for formal and actual parameter 1
+  HW1_VadimKobrinsky.vcxproj -> C:\Users\Vadim\Documents\Visual Studio 2015\Projects\HW1_VadimKobrinsky\Debug\HW1_VadimKobrinsky.exe
+  HW1_VadimKobrinsky.vcxproj -> C:\Users\Vadim\Documents\Visual Studio 2015\Projects\HW1_VadimKobrinsky\Debug\HW1_VadimKobrinsky.pdb (Full PDB)
