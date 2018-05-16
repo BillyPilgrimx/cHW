@@ -18,7 +18,7 @@ void InitLimerickProg(char* myLimerick[]);
 char* InsertWord(char* str, int index, char* aword);
 char* DeleteWord(char* str, int index);
 char* ReplaceWord(char* str, char* word1, char* word2);
-int EditLine(char* myLimerick[]);
+void InitMenu(char* limerick[]);
 char* ScanUnlimited();
 int CountSpaces(char* str);
 int HaveSimilarEndings(char* str1, char* str2, int num);
@@ -27,13 +27,9 @@ char* ReplaceWord(char* str, char* word1, char* word2);
 void main()
 {
 	char* limerick[LINE_NUM];
-	char text;
-	int lineChoice;
-	char word1[] = "Brazil";
-	char word2[] = "XXX";
 
 	InitLimerickProg(limerick);
-	EditLine(limerick);
+	InitMenu(limerick);
 
 }
 
@@ -50,7 +46,7 @@ void InitLimerickProg(char* limerick[])
 	printf("1. %s\n", limerick[0]);
 	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was ... like a ...");
 	printf("2. %s\n", limerick[1]);
-	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he ...");
+	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has ...");
 	printf("3. %s\n", limerick[2]);
 	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He ...");
 	printf("4. %s\n", limerick[3]);
@@ -231,7 +227,6 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 
 
 	// adding a space before the word we would like to search for better searching...
-	char tmpLetter;
 	int tmpLength = 0;
 	char* _word1 = NULL;
 
@@ -248,11 +243,11 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 	_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
 	_word1[tmpLength] = '\0';
 	tmpLength++;
-	
+
 	char letter;
 	subStringAfterCuttingOut = strstr(str, _word1);
 	char* secondPart = DeleteWord(subStringAfterCuttingOut, DEFAULT_POSITION);
-	
+
 	int strLength = 0;
 	letter = *str;
 	int i = 0;
@@ -277,7 +272,7 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 	return returnStr;
 }
 
-int EditLine(char* limerick[])
+void InitMenu(char* limerick[])
 {
 	int flag = 1;
 	char choice;
@@ -286,7 +281,7 @@ int EditLine(char* limerick[])
 	while (flag != 0)
 	{
 		flag = 0;
-		printf("If you like to edit a line please enter which line would you like to edit (1-5)\nPress 9 after editing the lines for finding similar endings or 0 at anytime for EXIT: ");
+		printf("You are in edit mode please select a line you would like to edit (1-5)\nPress 8 to exit edit mode and show the whole limerick\nPress 9 after editing the lines for finding similar endings\nPress 0 at anytime for EXIT: ");
 		scanf(" %c", &choice);
 
 		if (choice == '0')
@@ -308,26 +303,89 @@ int EditLine(char* limerick[])
 	choiceNum = ((int)choice) - 48;
 	printf("\n");
 
-	switch (choiceNum)
+
+	int flag2 = 1;
+
+	while (flag2 != 0)
 	{
-	case 1:
-		printf("You chose to edit line number: %d\n\n", choiceNum);
-		puts(limerick[0]);
-		puts("Please enter a word to substitue the first (...) - usually a character\n");
-		puts("Suggestions: man, boy, lad, old man, dog");
-		gets();
-		limerick[0] = ReplaceWord(limerick[0], "...", gets());
-		puts(limerick[0]);
-		puts("Please enter a word to substitue the second (...) - usually a place\n");
-		puts("Suggestions: Brazil, Germany, Moon");
-		limerick[0] = ReplaceWord(limerick[0], "...", gets());
-		puts(limerick[0]);
+		flag2 = 0;
+		switch (choiceNum)
+		{
+		case 1:
+			flag2 = 1;
+			printf("You chose to edit line number: %d\n\n", choiceNum);
+			puts(limerick[0]);
+
+			puts("Please enter a word to substitue the first (...) - usually a character\n");
+			puts("Suggestions: man, boy, lad, old man, dog");
+			limerick[0] = ReplaceWord(limerick[0], "...", ScanUnlimited());
+			puts(limerick[0]);
+
+			puts("Please enter a word to substitue the second (...) - usually a place\n");
+			puts("Suggestions: Brazil, Germany, Moon, Heaven, Japan");
+			limerick[0] = ReplaceWord(limerick[0], "...", ScanUnlimited());
+			puts(limerick[0]);
+			printf("\nWhich line to edit next (zero for exit): ");
+			scanf("%d", &choiceNum);
+			break;
+
+		case 2:
+			flag2 = 1;
+			printf("You chose to edit line number: %d\n\n", choiceNum);
+			puts(limerick[1]);
+
+			puts("Please enter a word to substitue the first (...) - usually a verb\n");
+			puts("Suggestions: eating, running, sleeping, programing, weeping");
+			limerick[1] = ReplaceWord(limerick[1], "...", ScanUnlimited());
+			puts(limerick[1]);
+
+			puts("Please enter a word to substitue the second (...) - usually a noun\n");
+			puts("Suggestions: stone, girl, bear, indian, mouse");
+			limerick[1] = ReplaceWord(limerick[1], "...", ScanUnlimited());
+			puts(limerick[1]);
+			printf("\nWhich line to edit next (zero for exit): ");
+			scanf("%d", &choiceNum);
+			break;
+
+		case 3:
+			flag2 = 1;
+			printf("You chose to edit line number: %d\n\n", choiceNum);
+			puts(limerick[2]);
+
+			puts("Please enter a pair of words to substitue the (...) - usually a verb\n");
+			puts("Suggestions: has awaken, been mistaken, felt shaken, talked without a break");
+			limerick[2] = ReplaceWord(limerick[2], "...", ScanUnlimited());
+			puts(limerick[2]);
+			printf("\nWhich line to edit next (zero for exit): ");
+			scanf("%d", &choiceNum);
+			break;
+			
+
+		case 4:
+			flag2 = 1;
+			puts("Please enter a pair of words to substitue the (...) - usually a adverb\n");
+			puts("Suggestions: been attacked by a cat , worn a hat, felt shame and regret");
+			limerick[3] = ReplaceWord(limerick[3], "...", ScanUnlimited());
+			puts(limerick[3]);
+			printf("\nWhich line to edit next (zero for exit): ");
+			scanf("%d", &choiceNum);
+			break;
+
+		case 5:
+			flag2 = 1;
+			puts("Please enter a sentence to substitue the (...) - usually a closing sentence\n");
+			puts("Suggestions: he sounded like an earthquake, how he met his own destiny");
+			limerick[3] = ReplaceWord(limerick[3], "...", ScanUnlimited());
+			puts(limerick[3]);
+			printf("\nWhich line to edit next (zero for exit): ");
+			scanf("%d", &choiceNum);
+			break;
+
+		case 0:
+			break;
+
+		}
 	}
-
-
-
-
-
 }
 
 char* ScanUnlimited()
@@ -336,8 +394,8 @@ char* ScanUnlimited()
 	char letter;
 	int length = 0;
 
-	scanf("%c", &letter);
-	while (letter != 13)
+	scanf(" %c", &letter);
+	while (letter != '\n')
 	{
 		str = (char*)realloc(str, sizeof(char) * (length + 1));
 		str[length] = letter;
