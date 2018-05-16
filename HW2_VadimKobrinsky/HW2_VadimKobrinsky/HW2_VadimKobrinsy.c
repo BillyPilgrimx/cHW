@@ -9,61 +9,184 @@
 #include <string.h>
 
 #define LINE_NUM 5
-#define SPACE ' '
+#define SPACE_CH ' '
+#define SPACE_STR " "
+#define DEFAULT_POSITION 0
 
 // prototypes
-void Welcome(char* exampleLimrick[]);
-void initDynamicArrays(char* myLimerick[]);
-int EditLine(char* myLimerick[]);
-char* ReadUnlimited();
-
-int HaveSimilarEndings(char* str1, char* str2, int num);
+void InitLimerick(char* myLimerick[]);
+char* InsertWord(char* str, int index, char* aword);
 char* DeleteWord(char* str, int index);
-char* InsertWord(char* str, int index);
+int EditLine(char* myLimerick[]);
+char* ScanUnlimited();
+int CountSpaces(char* str);
+int HaveSimilarEndings(char* str1, char* str2, int num);
 char* ReplaceWord(char* str, char* word1, char* word2);
 
 void main()
 {
-	char* exampleLimrick[LINE_NUM];
-	char* myLimerick[LINE_NUM];
+	char* limerick[LINE_NUM];
 	char text;
 	int lineChoice;
 
-	Welcome(exampleLimrick);
-	initDynamicArrays(myLimerick);
-	lineChoice = EditLine(myLimerick);
+	InitLimerick(limerick);
+	// EditLine(limerick);
 
-
-
-
+	puts(limerick[0]);
+	limerick[0] = DeleteWord(limerick[0], 2);
+	puts(limerick[0]);
 }
 
-void Welcome(char* exampleLimrick[]) {
-
-	char* welcomeLimerick[LINE_NUM];
-	welcomeLimerick[0] = "There was a ... from ... ";
-	welcomeLimerick[1] = "Who ... ";
-	welcomeLimerick[2] = "When he/she ... ";
-	welcomeLimerick[3] = "He/She ...";
-	welcomeLimerick[4] = "... ";
-
-	printf("Hello and welcome to the limerick generator program!\nThe common pattern for a limerick is something like this:\n");
-	int i;
-	for (i = 0; i < LINE_NUM; i++)
-	{
-		printf("%d. %s\n", i + 1, welcomeLimerick[i]);
-	}
-}
-
-void initDynamicArrays(char* myLimerick[])
+void InitLimerick(char* limerick[])
 {
+	puts("Hello and welcome to the limerick generator program!\nThe common pattern for a limerick is something like this:\n");
+
 	int i;
 	for (i = 0; i < LINE_NUM; i++) {
-		myLimerick[i] = NULL;
+		limerick[i] = "";
 	}
 
+	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
+	printf("1. %s\n", limerick[0]);
+	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who ... ");
+	printf("2. %s\n", limerick[1]);
+	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he/she ...");
+	printf("3. %s\n", limerick[2]);
+	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He/She ...");
+	printf("4. %s\n", limerick[3]);
+	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "...");
+	printf("5. %s\n\n", limerick[4]);
+}
 
+char* InsertWord(char* str, int index, char* aword)
+{
+	char* nullStr = "";
+	int numberOfWords = CountSpaces(str) + 1;
+	if (strcmp(str, nullStr) == 0)
+	{
+		numberOfWords = 0;
+	}
+	char* returnStr = NULL;
+	char letter;
+	int strLength = 0;
 
+	if (numberOfWords < index)
+	{
+		puts("Invalid index - legal values range from 0 -> number of words in a line");
+		free(str);
+		exit(1);
+	}
+
+	if (index != 0)
+	{
+
+		letter = *str;
+		int i = 0;
+		while ((letter != SPACE_CH || i < index - 1) && letter != '\0')
+		{
+			if (letter == SPACE_CH)
+			{
+				i++;
+			}
+			returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+			returnStr[strLength] = letter;
+			strLength++;
+			str++;
+			letter = *str;
+		}
+
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = ' ';
+		strLength++;
+	}
+
+	letter = *aword;
+	while (letter != '\0')
+	{
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = letter;
+		strLength++;
+		aword++;
+		letter = *aword;
+	}
+
+	if (index == 0 && (0 < numberOfWords))
+	{
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = ' ';
+		strLength++;
+	}
+
+	letter = *str;
+	while (letter != '\0')
+	{
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = letter;
+		strLength++;
+		str++;
+		letter = *str;
+	}
+
+	returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+	returnStr[strLength] = '\0';
+
+	return returnStr;
+}
+
+char* DeleteWord(char* str, int index)
+{
+	char* nullStr = "";
+	int numberOfWords = CountSpaces(str) + 1;
+	if (strcmp(str, nullStr) == 0)
+	{
+		numberOfWords = 0;
+	}
+	char* returnStr = NULL;
+	char letter;
+	int strLength = 0;
+
+	if (numberOfWords < index || index == 0)
+	{
+		puts("Invalid index - legal values range from 1 -> number of words in a line");
+		free(str);
+		exit(1);
+	}
+
+	letter = *str;
+	int i = 0;
+	while ((letter != SPACE_CH || i < index - 1) && letter != '\0')
+	{
+		if (letter == SPACE_CH)
+		{
+			i++;
+		}
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = letter;
+		strLength++;
+		str++;
+		letter = *str;
+	}
+
+	while (letter != SPACE_CH)
+	{
+		str++;	
+		letter = *str;
+	}
+
+	letter = *str;
+	while (letter != '\0')
+	{
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = letter;
+		strLength++;
+		str++;
+		letter = *str;
+	}
+
+	returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+	returnStr[strLength] = '\0';
+
+	return returnStr;
 }
 
 int EditLine(char* myLimerick[])
@@ -86,44 +209,21 @@ int EditLine(char* myLimerick[])
 		}
 		else if (choice == '9')
 		{
-			
+
 		}
-		else if (choice < 49 || 53 < choice)
+		else if (choice < '1' || '5' < choice)
 		{
 			flag = 1;
 			printf("Invalid input, please try again...\n");
 		}
-		
+
 	}
 
 	choiceNum = ((int)choice) - 48;
-	// printf("You editing the line: %s", *limerick[choice]);
-
-	switch (choice)
-	{
-	case '1': 
-		break;
-
-	case '2':
-		break;
-
-	case '3':
-		break;
-
-	case '4':
-		break;
-
-	case '5':
-		break;
-
-	default:
-		break;
-	}
-
 	return choiceNum;
 }
 
-char* ReadUnlimited()
+char* ScanUnlimited()
 {
 	char* str = NULL;
 	char letter;
@@ -148,7 +248,7 @@ int CountSpaces(char* str)
 	int counter = 0;
 	while (*str != '\0')
 	{
-		if (*str == SPACE)
+		if (*str == SPACE_CH)
 		{
 			counter++;
 		}
@@ -157,21 +257,20 @@ int CountSpaces(char* str)
 	return counter;
 }
 
-char* DeleteWord(char* str, int index)
+int CountCharacters(char* str)
 {
-	char* tmpStr;
-
-
+	int counter = 0;
+	while (*str != '\0')
+	{
+		counter++;
+		str++;
+	}
+	return counter;
 }
 
 
-char* InsertWord(char* str, int index)
-{
-	char* tmpStr = NULL;
 
 
 
 
-
-}
 
