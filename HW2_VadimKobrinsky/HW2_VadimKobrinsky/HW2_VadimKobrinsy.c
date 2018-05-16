@@ -17,6 +17,7 @@
 void InitLimerick(char* myLimerick[]);
 char* InsertWord(char* str, int index, char* aword);
 char* DeleteWord(char* str, int index);
+char* ReplaceWord(char* str, char* word1, char* word2);
 int EditLine(char* myLimerick[]);
 char* ScanUnlimited();
 int CountSpaces(char* str);
@@ -33,7 +34,9 @@ void main()
 	// EditLine(limerick);
 
 	puts(limerick[0]);
-	limerick[0] = DeleteWord(limerick[0], 2);
+	limerick[0] = DeleteWord(limerick[0], 3);
+	puts(limerick[0]);
+	limerick[0] = InsertWord(limerick[0], 3, "man");
 	puts(limerick[0]);
 }
 
@@ -48,7 +51,7 @@ void InitLimerick(char* limerick[])
 
 	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
 	printf("1. %s\n", limerick[0]);
-	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who ... ");
+	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who ...");
 	printf("2. %s\n", limerick[1]);
 	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he/she ...");
 	printf("3. %s\n", limerick[2]);
@@ -72,7 +75,7 @@ char* InsertWord(char* str, int index, char* aword)
 
 	if (numberOfWords < index)
 	{
-		puts("Invalid index - legal values range from 0 -> number of words in a line");
+		puts("Invalid index - legal range values for InsertWord are from 0 -> number of words in a line");
 		free(str);
 		exit(1);
 	}
@@ -140,39 +143,64 @@ char* DeleteWord(char* str, int index)
 	if (strcmp(str, nullStr) == 0)
 	{
 		numberOfWords = 0;
+		puts("Invalid action - cannot delete a word from a non initiated string");
+		free(str);
+		exit(1);
 	}
 	char* returnStr = NULL;
 	char letter;
 	int strLength = 0;
 
-	if (numberOfWords < index || index == 0)
+	if (numberOfWords < index)
 	{
-		puts("Invalid index - legal values range from 1 -> number of words in a line");
+		puts("Invalid index - legal range values for DeleteWord are from 0 -> number of words in a line");
 		free(str);
 		exit(1);
 	}
 
-	letter = *str;
-	int i = 0;
-	while ((letter != SPACE_CH || i < index - 1) && letter != '\0')
+	if (index != 0)
 	{
-		if (letter == SPACE_CH)
+
+		letter = *str;
+		int i = 0;
+		while ((letter != SPACE_CH || i < index - 1) && letter != '\0')
 		{
-			i++;
+			if (letter == SPACE_CH)
+			{
+				i++;
+			}
+			returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+			returnStr[strLength] = letter;
+			strLength++;
+			str++;
+			letter = *str;
 		}
-		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-		returnStr[strLength] = letter;
-		strLength++;
+	}
+
+	str++;
+	letter = *str;
+	while (letter != SPACE_CH)
+	{	
+		// in case we deleting the last word
+		if (letter == '\0')
+		{
+			returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+			returnStr[strLength] = '\0';
+			return returnStr;
+		}
 		str++;
 		letter = *str;
 	}
 
-	while (letter != SPACE_CH)
+	
+	if (index != 0 && (0 < numberOfWords))
 	{
-		str++;	
-		letter = *str;
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = ' ';
+		strLength++;
 	}
-
+	
+	str++;
 	letter = *str;
 	while (letter != '\0')
 	{
@@ -187,6 +215,11 @@ char* DeleteWord(char* str, int index)
 	returnStr[strLength] = '\0';
 
 	return returnStr;
+}
+
+char* ReplaceWord(char* str, char* word1, char* word2)
+{
+	
 }
 
 int EditLine(char* myLimerick[])
