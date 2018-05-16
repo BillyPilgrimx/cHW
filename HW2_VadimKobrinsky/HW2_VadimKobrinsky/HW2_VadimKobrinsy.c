@@ -14,7 +14,7 @@
 #define DEFAULT_POSITION 0
 
 // prototypes
-void InitLimerick(char* myLimerick[]);
+void InitLimerickProg(char* myLimerick[]);
 char* InsertWord(char* str, int index, char* aword);
 char* DeleteWord(char* str, int index);
 char* ReplaceWord(char* str, char* word1, char* word2);
@@ -32,23 +32,12 @@ void main()
 	char word1[] = "Brazil";
 	char word2[] = "XXX";
 
-	InitLimerick(limerick);
-	
+	InitLimerickProg(limerick);
+	EditLine(limerick);
 
-	limerick[0] = ReplaceWord(limerick[0], &word1, &word2);
-	puts(limerick[0]);
-	// EditLine(limerick);
-
-	/*
-	puts(limerick[0]);
-	limerick[0] = DeleteWord(limerick[0], 3);
-	puts(limerick[0]);
-	limerick[0] = InsertWord(limerick[0], 3, "man");
-	puts(limerick[0]);
-	*/
 }
 
-void InitLimerick(char* limerick[])
+void InitLimerickProg(char* limerick[])
 {
 	puts("Hello and welcome to the limerick generator program!\nThe common pattern for a limerick is something like this:\n");
 
@@ -57,15 +46,15 @@ void InitLimerick(char* limerick[])
 		limerick[i] = "";
 	}
 
-	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a man from Brazil");
+	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
 	printf("1. %s\n", limerick[0]);
-	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who ...");
+	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was ... like a ...");
 	printf("2. %s\n", limerick[1]);
-	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he/she ...");
+	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he ...");
 	printf("3. %s\n", limerick[2]);
-	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He/She ...");
+	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He ...");
 	printf("4. %s\n", limerick[3]);
-	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "...");
+	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
 	printf("5. %s\n\n", limerick[4]);
 }
 
@@ -288,7 +277,7 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 	return returnStr;
 }
 
-int EditLine(char* myLimerick[])
+int EditLine(char* limerick[])
 {
 	int flag = 1;
 	char choice;
@@ -297,8 +286,7 @@ int EditLine(char* myLimerick[])
 	while (flag != 0)
 	{
 		flag = 0;
-
-		printf("If you like to edit a line please enter which line would you like to edit (1-5)\nPress 9 for finding similar endings or 0 for EXIT: ");
+		printf("If you like to edit a line please enter which line would you like to edit (1-5)\nPress 9 after editing the lines for finding similar endings or 0 at anytime for EXIT: ");
 		scanf(" %c", &choice);
 
 		if (choice == '0')
@@ -317,9 +305,29 @@ int EditLine(char* myLimerick[])
 		}
 
 	}
-
 	choiceNum = ((int)choice) - 48;
-	return choiceNum;
+	printf("\n");
+
+	switch (choiceNum)
+	{
+	case 1:
+		printf("You chose to edit line number: %d\n\n", choiceNum);
+		puts(limerick[0]);
+		puts("Please enter a word to substitue the first (...) - usually a character\n");
+		puts("Suggestions: man, boy, lad, old man, dog");
+		gets();
+		limerick[0] = ReplaceWord(limerick[0], "...", gets());
+		puts(limerick[0]);
+		puts("Please enter a word to substitue the second (...) - usually a place\n");
+		puts("Suggestions: Brazil, Germany, Moon");
+		limerick[0] = ReplaceWord(limerick[0], "...", gets());
+		puts(limerick[0]);
+	}
+
+
+
+
+
 }
 
 char* ScanUnlimited()
