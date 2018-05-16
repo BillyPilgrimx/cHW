@@ -1,0 +1,5 @@
+﻿  HW2_VadimKobrinsy.c
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(28): warning C4101: 'text': unreferenced local variable
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(148): warning C4716: 'InsertWord': must return a value
+  HW2_VadimKobrinsky.vcxproj -> C:\Users\Vadim\Documents\Visual Studio 2015\Projects\HW2_VadimKobrinsky\Debug\HW2_VadimKobrinsky.exe
+  HW2_VadimKobrinsky.vcxproj -> C:\Users\Vadim\Documents\Visual Studio 2015\Projects\HW2_VadimKobrinsky\Debug\HW2_VadimKobrinsky.pdb (Full PDB)
