@@ -29,15 +29,23 @@ void main()
 	char* limerick[LINE_NUM];
 	char text;
 	int lineChoice;
+	char word1[] = "Brazil";
+	char word2[] = "XXX";
 
 	InitLimerick(limerick);
+	
+
+	limerick[0] = ReplaceWord(limerick[0], &word1, &word2);
+	puts(limerick[0]);
 	// EditLine(limerick);
 
+	/*
 	puts(limerick[0]);
 	limerick[0] = DeleteWord(limerick[0], 3);
 	puts(limerick[0]);
 	limerick[0] = InsertWord(limerick[0], 3, "man");
 	puts(limerick[0]);
+	*/
 }
 
 void InitLimerick(char* limerick[])
@@ -49,7 +57,7 @@ void InitLimerick(char* limerick[])
 		limerick[i] = "";
 	}
 
-	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
+	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a man from Brazil");
 	printf("1. %s\n", limerick[0]);
 	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who ...");
 	printf("2. %s\n", limerick[1]);
@@ -180,7 +188,7 @@ char* DeleteWord(char* str, int index)
 	str++;
 	letter = *str;
 	while (letter != SPACE_CH)
-	{	
+	{
 		// in case we deleting the last word
 		if (letter == '\0')
 		{
@@ -192,14 +200,14 @@ char* DeleteWord(char* str, int index)
 		letter = *str;
 	}
 
-	
+
 	if (index != 0 && (0 < numberOfWords))
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
 		returnStr[strLength] = ' ';
 		strLength++;
 	}
-	
+
 	str++;
 	letter = *str;
 	while (letter != '\0')
@@ -219,7 +227,65 @@ char* DeleteWord(char* str, int index)
 
 char* ReplaceWord(char* str, char* word1, char* word2)
 {
+	char* returnStr = NULL;
+	char* subStringAfterCuttingOut = strstr(str, word1);
+	int wordsNumInFirstPart;
+
+	// in case we want to substitute the first word
+	if (str == subStringAfterCuttingOut)
+	{
+		returnStr = DeleteWord(str, DEFAULT_POSITION);
+		returnStr = InsertWord(returnStr, DEFAULT_POSITION, word2);
+
+		return returnStr;
+	}
+
+
+	// adding a space before the word we would like to search for better searching...
+	char tmpLetter;
+	int tmpLength = 0;
+	char* _word1 = NULL;
+
+	_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
+	_word1[tmpLength] = ' ';
+	tmpLength++;
+	while (*word1 != '\0')
+	{
+		_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
+		_word1[tmpLength] = *word1;
+		tmpLength++;
+		word1++;
+	}
+	_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
+	_word1[tmpLength] = '\0';
+	tmpLength++;
 	
+	char letter;
+	subStringAfterCuttingOut = strstr(str, _word1);
+	char* secondPart = DeleteWord(subStringAfterCuttingOut, DEFAULT_POSITION);
+	
+	int strLength = 0;
+	letter = *str;
+	int i = 0;
+	while (str < subStringAfterCuttingOut)
+	{
+		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+		returnStr[strLength] = letter;
+		strLength++;
+		str++;
+		letter = *str;
+	}
+	returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
+	returnStr[strLength] = '\0';
+	strLength++;
+
+	wordsNumInFirstPart = CountSpaces(returnStr);
+	returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, word2);
+
+	wordsNumInFirstPart = CountSpaces(returnStr);
+	returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, secondPart);
+
+	return returnStr;
 }
 
 int EditLine(char* myLimerick[])

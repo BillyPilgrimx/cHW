@@ -1,6 +1,10 @@
 ﻿  HW2_VadimKobrinsy.c
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(38): warning C4047: 'function': 'char *' differs in levels of indirection from 'char (*)[7]'
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(38): warning C4024: 'ReplaceWord': different types for formal and actual parameter 2
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(38): warning C4047: 'function': 'char *' differs in levels of indirection from 'char (*)[4]'
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(38): warning C4024: 'ReplaceWord': different types for formal and actual parameter 3
 c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(31): warning C4101: 'lineChoice': unreferenced local variable
 c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(30): warning C4101: 'text': unreferenced local variable
-c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(223): warning C4716: 'ReplaceWord': must return a value
+c:\users\vadim\documents\visual studio 2015\projects\hw2_vadimkobrinsky\hw2_vadimkobrinsky\hw2_vadimkobrinsy.c(247): warning C4101: 'tmpLetter': unreferenced local variable
   HW2_VadimKobrinsky.vcxproj -> C:\Users\Vadim\Documents\Visual Studio 2015\Projects\HW2_VadimKobrinsky\Debug\HW2_VadimKobrinsky.exe
   HW2_VadimKobrinsky.vcxproj -> C:\Users\Vadim\Documents\Visual Studio 2015\Projects\HW2_VadimKobrinsky\Debug\HW2_VadimKobrinsky.pdb (Full PDB)
