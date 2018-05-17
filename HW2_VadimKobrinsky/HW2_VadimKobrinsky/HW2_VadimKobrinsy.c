@@ -14,44 +14,36 @@
 #define DEFAULT_POSITION 0
 
 // prototypes
-void InitLimerickProg(char* myLimerick[]);
 char* InsertWord(char* str, int index, char* aword);
 char* DeleteWord(char* str, int index);
 char* ReplaceWord(char* str, char* word1, char* word2);
+int HaveSimilarEndings(char* str1, char* str2, int num);
+
+void initSampleLimerick(char* myLimerick[]);
 void InitMenu(char* limerick[]);
 char* ScanUnlimited();
 int CountSpaces(char* str);
-int HaveSimilarEndings(char* str1, char* str2, int num);
-char* ReplaceWord(char* str, char* word1, char* word2);
 
 void main()
 {
 	char* limerick[LINE_NUM];
 
-	InitLimerickProg(limerick);
+	initSampleLimerick(limerick);
 	InitMenu(limerick);
-
 }
 
-void InitLimerickProg(char* limerick[])
+void initSampleLimerick(char* limerick[])
 {
-	puts("Hello and welcome to the limerick generator program!\nThe common pattern for a limerick is something like this:\n");
-
+	puts("Hello and welcome to the limerick generator program!\nThe common pattern for a limerick is something like this:");
 	int i;
 	for (i = 0; i < LINE_NUM; i++) {
 		limerick[i] = "";
 	}
-
 	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
-	printf("1. %s\n", limerick[0]);
 	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was ... like a ...");
-	printf("2. %s\n", limerick[1]);
 	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has ...");
-	printf("3. %s\n", limerick[2]);
 	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He ...");
-	printf("4. %s\n", limerick[3]);
 	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
-	printf("5. %s\n\n", limerick[4]);
 }
 
 char* InsertWord(char* str, int index, char* aword)
@@ -274,118 +266,82 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 
 void InitMenu(char* limerick[])
 {
+	char* text1;
+	char* text2;
+	int choice;
+
 	int flag = 1;
-	char choice;
-	int choiceNum;
 
-	while (flag != 0)
+	do
 	{
+		printf("\n");
+		int i;
+		for (i = 0; i < LINE_NUM; i++)
+		{
+			puts(limerick[i]);
+		}
+		puts("\nWhich line would you like to edit (1-5) or press 0 to count the rhymes and exit: ");
+		scanf("%d", &choice);
+
 		flag = 0;
-		printf("You are in edit mode please select a line you would like to edit (1-5)\nPress 8 to exit edit mode and show the whole limerick\nPress 9 after editing the lines for finding similar endings\nPress 0 at anytime for EXIT: ");
-		scanf(" %c", &choice);
-
-		if (choice == '0')
-		{
-			puts("Thank you and see you next time!");
-			exit(0);
-		}
-		else if (choice == '9')
-		{
-
-		}
-		else if (choice < '1' || '5' < choice)
-		{
-			flag = 1;
-			printf("Invalid input, please try again...\n");
-		}
-
-	}
-	choiceNum = ((int)choice) - 48;
-	printf("\n");
-
-
-	int flag2 = 1;
-
-	while (flag2 != 0)
-	{
-		flag2 = 0;
-		switch (choiceNum)
+		switch (choice)
 		{
 		case 1:
-			flag2 = 1;
-			printf("You chose to edit line number: %d\n\n", choiceNum);
-			puts(limerick[0]);
-
-			puts("Please enter a word to substitue the first (...) - usually a character\n");
-			puts("Suggestions: man, boy, lad, old man, dog");
-			limerick[0] = ReplaceWord(limerick[0], "...", ScanUnlimited());
-			puts(limerick[0]);
-
-			puts("Please enter a word to substitue the second (...) - usually a place\n");
-			puts("Suggestions: Brazil, Germany, Moon, Heaven, Japan");
-			limerick[0] = ReplaceWord(limerick[0], "...", ScanUnlimited());
-			puts(limerick[0]);
-			printf("\nWhich line to edit next (zero for exit): ");
-			scanf("%d", &choiceNum);
+			flag = 1;
+			puts(limerick[choice - 1]);
+			puts("\nPlease enter which word you would like to substitute: ");
+			text1 = ScanUnlimited();
+			puts("\nwith which word ? (Suggestions: man, boy, lad, dog - Heaven, Brazil, Moon, Japan): ");
+			text2 = ScanUnlimited();
+			limerick[choice - 1] = ReplaceWord(limerick[choice - 1], text1, text2);
 			break;
 
 		case 2:
-			flag2 = 1;
-			printf("You chose to edit line number: %d\n\n", choiceNum);
-			puts(limerick[1]);
-
-			puts("Please enter a word to substitue the first (...) - usually a verb\n");
-			puts("Suggestions: eating, running, sleeping, programing, weeping");
-			limerick[1] = ReplaceWord(limerick[1], "...", ScanUnlimited());
-			puts(limerick[1]);
-
-			puts("Please enter a word to substitue the second (...) - usually a noun\n");
-			puts("Suggestions: stone, girl, bear, indian, mouse");
-			limerick[1] = ReplaceWord(limerick[1], "...", ScanUnlimited());
-			puts(limerick[1]);
-			printf("\nWhich line to edit next (zero for exit): ");
-			scanf("%d", &choiceNum);
+			flag = 1;
+			puts(limerick[choice - 1]);
+			puts("\nPlease enter which word you would like to substitute: ");
+			text1 = ScanUnlimited();
+			puts("\nwith which word ? (Suggestions: eating, running, sleeping, swinging, weeping - horse, stone, girl, bear, indian, mouse, mill): ");
+			text2 = ScanUnlimited();
+			limerick[choice - 1] = ReplaceWord(limerick[choice - 1], text1, text2);
 			break;
 
 		case 3:
-			flag2 = 1;
-			printf("You chose to edit line number: %d\n\n", choiceNum);
-			puts(limerick[2]);
-
-			puts("Please enter a pair of words to substitue the (...) - usually a verb\n");
-			puts("Suggestions: has awaken, been mistaken, felt shaken, talked without a break");
-			limerick[2] = ReplaceWord(limerick[2], "...", ScanUnlimited());
-			puts(limerick[2]);
-			printf("\nWhich line to edit next (zero for exit): ");
-			scanf("%d", &choiceNum);
+			flag = 1;
+			puts(limerick[choice - 1]);
+			puts("\nPlease enter which word you would like to substitute: ");
+			text1 = ScanUnlimited();
+			puts("\nwith which word ? (Suggestions: pointed at me, has awaken, been mistaken, felt shaken, talked without a break): ");
+			text2 = ScanUnlimited();
+			limerick[choice - 1] = ReplaceWord(limerick[choice - 1], text1, text2);
 			break;
-			
 
 		case 4:
-			flag2 = 1;
-			puts("Please enter a pair of words to substitue the (...) - usually a adverb\n");
-			puts("Suggestions: been attacked by a cat , worn a hat, felt shame and regret");
-			limerick[3] = ReplaceWord(limerick[3], "...", ScanUnlimited());
-			puts(limerick[3]);
-			printf("\nWhich line to edit next (zero for exit): ");
-			scanf("%d", &choiceNum);
+			flag = 1;
+			puts(limerick[choice - 1]);
+			puts("\nPlease enter which word you would like to substitute: ");
+			text1 = ScanUnlimited();
+			puts("\nwith which word ? (Suggestions: been attacked by a cat , worn a hat, felt shame and regret, looked sad and bleak): ");
+			text2 = ScanUnlimited();
+			limerick[choice - 1] = ReplaceWord(limerick[choice - 1], text1, text2);
 			break;
-
+			
 		case 5:
-			flag2 = 1;
-			puts("Please enter a sentence to substitue the (...) - usually a closing sentence\n");
-			puts("Suggestions: he sounded like an earthquake, how he met his own destiny");
-			limerick[3] = ReplaceWord(limerick[3], "...", ScanUnlimited());
-			puts(limerick[3]);
-			printf("\nWhich line to edit next (zero for exit): ");
-			scanf("%d", &choiceNum);
+			flag = 1;
+			puts(limerick[choice - 1]);
+			puts("\nPlease enter which word you would like to substitute: ");
+			text1 = ScanUnlimited();
+			puts("\nwith which word ? (Suggestions: he sounded like an earthquake, how he met his own destiny, he never got married): ");
+			text2 = ScanUnlimited();
+			limerick[choice - 1] = ReplaceWord(limerick[choice - 1], text1, text2);
 			break;
-
+			
 		case 0:
+			puts("\nCounting rhymes...");
 			break;
 
-		}
-	}
+		}  
+	} while (flag != 0);
 }
 
 char* ScanUnlimited()
