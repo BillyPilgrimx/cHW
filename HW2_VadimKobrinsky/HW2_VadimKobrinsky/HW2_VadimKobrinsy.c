@@ -254,17 +254,17 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 {
 	int i;
 
-	while (*str1 != '/0')
+	while (*str1 != '\0')
 	{
 		str1++;
 	}
 
 	for (i = 0; i < num; i++)
 	{
-		str2--;
+		str1--;
 	}
 
-	while (*str2 != '/0')
+	while (*str2 != '\0')
 	{
 		str2++;
 	}
@@ -275,12 +275,14 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 	}
 
 	int result = 1;
-	for (i = 0; i < num; i)
+	for (i = 0; i < num; i++)
 	{
 		if (*str1 != *str2)
 		{
 			result = 0;
 		}
+		str1++;
+		str2++;
 	}
 
 	return result;
@@ -293,10 +295,18 @@ void initSampleLimerick(char* limerick[])
 	for (i = 0; i < LINE_NUM; i++) {
 		limerick[i] = "";
 	}
+	/*
 	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
 	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was ... like a ...");
 	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has ...");
 	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He ...");
+	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
+	*/
+
+	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a man from Brazil");
+	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was looking like a pill");
+	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has having fun");
+	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He was smelling like Japan");
 	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
 }
 
@@ -305,8 +315,10 @@ void InitMenu(char* limerick[])
 	char* text1 = NULL;
 	char* text2 = NULL;
 	int choice;
+	int charsToCompare;
 
 	int flag = 1;
+	char innerFlag = 'y';
 
 	do
 	{
@@ -319,17 +331,17 @@ void InitMenu(char* limerick[])
 		}
 
 		// select a line to edit menu + get input
-		printf("\nWhich line would you like to edit (1-5) or press 0 to count the rhymes and exit: ");
+		printf("\nEnter which line you would like to edit (1-5) or press 0 to count the rhymes and exit\nFor exit without counting rhymes press any other character: ");
 		scanf("%d", &choice);
 		printf("\n");
 
 		// show the selected line
-		if (choice != 0)
+		if (0 < choice && choice < 6)
 		{
 			puts(limerick[choice - 1]);
-			printf("\nPlease enter which WORD you would like to SUBSTITUTE: ");
+			printf("\nPlease enter the WORD you would like to SUBSTITUTE: ");
 			text1 = ScanUnlimited();
-			printf("With which WORD? ");
+			printf("Enter the WORD to substitute WITH? ");
 		}
 
 		// different hints for eack line 
@@ -354,16 +366,48 @@ void InitMenu(char* limerick[])
 		case 5:
 			puts("(Suggestions: he sounded like an earthquake, how he met his own destiny, he never got married): ");
 			break;
-
+		
+		// the rhyme check with the HaveSimilarEndings() func happens here - in case 0
 		case 0:
 			flag = 1;
-			printf("\nHow many characters would you like to check for rhymes\n");
-			return;
+			while (innerFlag != 'n')
+			{
+				if (innerFlag != 'y' && innerFlag != 'n')
+				{
+					printf("\nInvalid input, try again...");
+					printf("\nDo you want to try and compare different number of ending characters? (y/n): ");
+				}
+				else
+				{
+
+
+					innerFlag = 'y';
+
+
+					printf("\nHow many characters would you like to check for rhymes: ");
+					scanf("%d", &charsToCompare);
+					printf("\nComparing the last %d ending characters of lines 1-2 and 3-4\n", charsToCompare);
+					int do_lines_1_2_rhyme = HaveSimilarEndings(limerick[DEFAULT_POSITION], limerick[DEFAULT_POSITION + 1], charsToCompare);
+					int do_lines_3_4_rhyme = HaveSimilarEndings(limerick[DEFAULT_POSITION + 2], limerick[DEFAULT_POSITION + 3], charsToCompare);
+					printf("\nThe number of rhymes is: %d", do_lines_1_2_rhyme + do_lines_3_4_rhyme);
+					printf("\nDo you want to try and compare different number of ending characters? (y/n): ");
+				}
+
+				scanf(" %c", &innerFlag);
+			}
+
+			printf("\nTHANK YOU AND SEE YOU NEXT TIME !!!\n");
+			exit(0);
+			break;
+
+		default:
+			printf("\nTHANK YOU AND SEE YOU NEXT TIME !!!\n");
+			exit(0);
 			break;
 		}
 
 		// scan the replacing word and execute ReplaceWord func
-		if (choice != 0 && text1 != NULL)
+		if (0 < choice && choice < 6 && text1 != NULL)
 		{
 			text2 = ScanUnlimited();
 			limerick[choice - 1] = ReplaceWord(limerick[choice - 1], text1, text2);
