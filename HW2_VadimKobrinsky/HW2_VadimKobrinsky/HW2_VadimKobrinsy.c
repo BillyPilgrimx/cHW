@@ -10,7 +10,10 @@
 
 #define LINE_NUM 5
 #define SPACE_CH ' '
+#define BSLSH_0 '\0'
+#define NULL_STR ""
 #define SPACE_STR " "
+
 #define DEFAULT_POSITION 0
 
 // prototypes
@@ -34,7 +37,7 @@ void main()
 
 char* InsertWord(char* str, int index, char* aword)
 {
-	char* nullStr = "";
+	char* nullStr = NULL_STR;
 	int numberOfWords = CountSpaces(str) + 1;
 	if (strcmp(str, nullStr) == 0)
 	{
@@ -56,7 +59,7 @@ char* InsertWord(char* str, int index, char* aword)
 
 		letter = *str;
 		int i = 0;
-		while ((letter != SPACE_CH || i < index - 1) && letter != '\0')
+		while ((letter != SPACE_CH || i < index - 1) && letter != BSLSH_0)
 		{
 			if (letter == SPACE_CH)
 			{
@@ -70,12 +73,12 @@ char* InsertWord(char* str, int index, char* aword)
 		}
 
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-		returnStr[strLength] = ' ';
+		returnStr[strLength] = SPACE_CH;
 		strLength++;
 	}
 
 	letter = *aword;
-	while (letter != '\0')
+	while (letter != BSLSH_0)
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
 		returnStr[strLength] = letter;
@@ -84,15 +87,16 @@ char* InsertWord(char* str, int index, char* aword)
 		letter = *aword;
 	}
 
-	if (index == 0 && (0 < numberOfWords))
+	//if (index == 0 && (0 < numberOfWords))
+	if (numberOfWords < index)
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-		returnStr[strLength] = ' ';
+		returnStr[strLength] = SPACE_CH;
 		strLength++;
 	}
 
 	letter = *str;
-	while (letter != '\0')
+	while (letter != BSLSH_0)
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
 		returnStr[strLength] = letter;
@@ -102,14 +106,14 @@ char* InsertWord(char* str, int index, char* aword)
 	}
 
 	returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-	returnStr[strLength] = '\0';
+	returnStr[strLength] = BSLSH_0;
 
 	return returnStr;
 }
 
 char* DeleteWord(char* str, int index)
 {
-	char* nullStr = "";
+	char* nullStr = NULL_STR;
 	int numberOfWords = CountSpaces(str) + 1;
 	if (strcmp(str, nullStr) == 0)
 	{
@@ -134,7 +138,7 @@ char* DeleteWord(char* str, int index)
 
 		letter = *str;
 		int i = 0;
-		while ((letter != SPACE_CH || i < index - 1) && letter != '\0')
+		while ((letter != SPACE_CH || i < index - 1) && letter != BSLSH_0)
 		{
 			if (letter == SPACE_CH)
 			{
@@ -153,10 +157,10 @@ char* DeleteWord(char* str, int index)
 	while (letter != SPACE_CH)
 	{
 		// in case we deleting the last word
-		if (letter == '\0')
+		if (letter == BSLSH_0)
 		{
 			returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-			returnStr[strLength] = '\0';
+			returnStr[strLength] = BSLSH_0;
 			return returnStr;
 		}
 		str++;
@@ -167,13 +171,13 @@ char* DeleteWord(char* str, int index)
 	if (index != 0 && (0 < numberOfWords))
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-		returnStr[strLength] = ' ';
+		returnStr[strLength] = SPACE_CH;
 		strLength++;
 	}
 
 	str++;
 	letter = *str;
-	while (letter != '\0')
+	while (letter != BSLSH_0)
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
 		returnStr[strLength] = letter;
@@ -183,7 +187,7 @@ char* DeleteWord(char* str, int index)
 	}
 
 	returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-	returnStr[strLength] = '\0';
+	returnStr[strLength] = BSLSH_0;
 
 	return returnStr;
 }
@@ -209,9 +213,9 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 	char* _word1 = NULL;
 
 	_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
-	_word1[tmpLength] = ' ';
+	_word1[tmpLength] = SPACE_CH;
 	tmpLength++;
-	while (*word1 != '\0')
+	while (*word1 != BSLSH_0)
 	{
 		_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
 		_word1[tmpLength] = *word1;
@@ -219,7 +223,7 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 		word1++;
 	}
 	_word1 = (char*)realloc(_word1, sizeof(char) * (tmpLength + 1));
-	_word1[tmpLength] = '\0';
+	_word1[tmpLength] = BSLSH_0;
 	tmpLength++;
 
 	char letter;
@@ -238,23 +242,28 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 		letter = *str;
 	}
 	returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
-	returnStr[strLength] = '\0';
+	returnStr[strLength] = BSLSH_0;
 	strLength++;
 
 	wordsNumInFirstPart = CountSpaces(returnStr);
 	returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, word2);
 
-	wordsNumInFirstPart = CountSpaces(returnStr);
-	returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, secondPart);
+	if (0 < CountSpaces(secondPart)) 
+	{
+		wordsNumInFirstPart = CountSpaces(returnStr);
+		returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, secondPart);
+	}
 
 	return returnStr;
 }
 
 int HaveSimilarEndings(char* str1, char* str2, int num)
 {
+	char* tmpStr1;
+	char* tmpStr2;
 	int i;
 
-	while (*str1 != '\0')
+	while (*str1 != BSLSH_0)
 	{
 		str1++;
 	}
@@ -264,7 +273,7 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 		str1--;
 	}
 
-	while (*str2 != '\0')
+	while (*str2 != BSLSH_0)
 	{
 		str2++;
 	}
@@ -273,6 +282,7 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 	{
 		str2--;
 	}
+
 
 	int result = 1;
 	for (i = 0; i < num; i++)
@@ -285,6 +295,13 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 		str2++;
 	}
 
+
+	for (i = 0; i < num; i++)
+	{
+
+	}
+
+
 	return result;
 }
 
@@ -295,19 +312,20 @@ void initSampleLimerick(char* limerick[])
 	for (i = 0; i < LINE_NUM; i++) {
 		limerick[i] = "";
 	}
-	/*
+
 	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a ... from ...");
 	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was ... like a ...");
 	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has ...");
 	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He ...");
 	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
-	*/
 
+	/*
 	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a man from Brazil");
 	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was looking like a pill");
-	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has having fun");
-	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He was smelling like Japan");
+	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has having Japan");
+	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He was smelling like clown");
 	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
+	*/
 }
 
 void InitMenu(char* limerick[])
@@ -366,8 +384,8 @@ void InitMenu(char* limerick[])
 		case 5:
 			puts("(Suggestions: he sounded like an earthquake, how he met his own destiny, he never got married): ");
 			break;
-		
-		// the rhyme check with the HaveSimilarEndings() func happens here - in case 0
+
+			// the rhyme check with the HaveSimilarEndings() func happens here - in case 0
 		case 0:
 			flag = 1;
 			while (innerFlag != 'n')
@@ -379,10 +397,7 @@ void InitMenu(char* limerick[])
 				}
 				else
 				{
-
-
 					innerFlag = 'y';
-
 
 					printf("\nHow many characters would you like to check for rhymes: ");
 					scanf("%d", &charsToCompare);
@@ -431,7 +446,7 @@ char* ScanUnlimited()
 		scanf("%c", &letter);
 	}
 	str = (char*)realloc(str, sizeof(char) * (length + 1));
-	str[length] = '\0';
+	str[length] = BSLSH_0;
 
 	return str;
 }
@@ -439,7 +454,7 @@ char* ScanUnlimited()
 int CountSpaces(char* str)
 {
 	int counter = 0;
-	while (*str != '\0')
+	while (*str != BSLSH_0)
 	{
 		if (*str == SPACE_CH)
 		{
@@ -453,7 +468,7 @@ int CountSpaces(char* str)
 int CountCharacters(char* str)
 {
 	int counter = 0;
-	while (*str != '\0')
+	while (*str != BSLSH_0)
 	{
 		counter++;
 		str++;
