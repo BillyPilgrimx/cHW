@@ -4,16 +4,17 @@
 // Teacher: Victor
 #define _CRT_SECURE_NO_WARNINGS
 
+// libraries
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// constants
 #define LINE_NUM 5
 #define SPACE_CH ' '
 #define BSLSH_0 '\0'
 #define NULL_STR ""
 #define SPACE_STR " "
-
 #define DEFAULT_POSITION 0
 
 // prototypes
@@ -21,7 +22,6 @@ char* InsertWord(char* str, int index, char* aword);
 char* DeleteWord(char* str, int index);
 char* ReplaceWord(char* str, char* word1, char* word2);
 int HaveSimilarEndings(char* str1, char* str2, int num);
-
 void initSampleLimerick(char* myLimerick[]);
 void InitMenu(char* limerick[]);
 char* ScanUnlimited();
@@ -87,7 +87,6 @@ char* InsertWord(char* str, int index, char* aword)
 		letter = *aword;
 	}
 
-	//if (index == 0 && (0 < numberOfWords))
 	if (numberOfWords < index)
 	{
 		returnStr = (char*)realloc(returnStr, sizeof(char) * (strLength + 1));
@@ -248,7 +247,7 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 	wordsNumInFirstPart = CountSpaces(returnStr);
 	returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, word2);
 
-	if (0 < CountSpaces(secondPart)) 
+	if (0 < CountSpaces(secondPart))
 	{
 		wordsNumInFirstPart = CountSpaces(returnStr);
 		returnStr = InsertWord(returnStr, wordsNumInFirstPart + 1, secondPart);
@@ -259,8 +258,6 @@ char* ReplaceWord(char* str, char* word1, char* word2)
 
 int HaveSimilarEndings(char* str1, char* str2, int num)
 {
-	char* tmpStr1;
-	char* tmpStr2;
 	int i;
 
 	while (*str1 != BSLSH_0)
@@ -283,7 +280,6 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 		str2--;
 	}
 
-
 	int result = 1;
 	for (i = 0; i < num; i++)
 	{
@@ -295,16 +291,10 @@ int HaveSimilarEndings(char* str1, char* str2, int num)
 		str2++;
 	}
 
-
-	for (i = 0; i < num; i++)
-	{
-
-	}
-
-
 	return result;
 }
 
+// function that initiates the begining template
 void initSampleLimerick(char* limerick[])
 {
 	puts("Hello and welcome to the limerick generator program!\nThe common pattern for a limerick is something like this:");
@@ -319,15 +309,9 @@ void initSampleLimerick(char* limerick[])
 	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He ...");
 	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
 
-	/*
-	limerick[0] = InsertWord(limerick[0], DEFAULT_POSITION, "There was a man from Brazil");
-	limerick[1] = InsertWord(limerick[1], DEFAULT_POSITION, "Who was looking like a pill");
-	limerick[2] = InsertWord(limerick[2], DEFAULT_POSITION, "When he has having Japan");
-	limerick[3] = InsertWord(limerick[3], DEFAULT_POSITION, "He was smelling like clown");
-	limerick[4] = InsertWord(limerick[4], DEFAULT_POSITION, "Thats funny ...");
-	*/
 }
 
+// function that manages the dialog with the user
 void InitMenu(char* limerick[])
 {
 	char* text1 = NULL;
@@ -374,7 +358,7 @@ void InitMenu(char* limerick[])
 			break;
 
 		case 3:
-			printf("(Suggestions: pointed at me, has awaken, been mistaken, felt shaken, talked without a break): ");
+			printf("(Suggestions: pointed at me, awaken, been mistaken, felt shaken, talked without a break): ");
 			break;
 
 		case 4:
@@ -399,7 +383,7 @@ void InitMenu(char* limerick[])
 				{
 					innerFlag = 'y';
 
-					printf("\nHow many characters would you like to check for rhymes: ");
+					printf("\nHow many characters (counting from the end) would you like to check for rhymes: ");
 					scanf("%d", &charsToCompare);
 					printf("\nComparing the last %d ending characters of lines 1-2 and 3-4\n", charsToCompare);
 					int do_lines_1_2_rhyme = HaveSimilarEndings(limerick[DEFAULT_POSITION], limerick[DEFAULT_POSITION + 1], charsToCompare);
@@ -431,6 +415,7 @@ void InitMenu(char* limerick[])
 	} while (flag != 0);
 }
 
+// function that receives an input from the user that limits with '\n' 
 char* ScanUnlimited()
 {
 	char* str = NULL;
@@ -451,6 +436,7 @@ char* ScanUnlimited()
 	return str;
 }
 
+// function that helps to count spaces used in several other functions
 int CountSpaces(char* str)
 {
 	int counter = 0;
@@ -465,16 +451,6 @@ int CountSpaces(char* str)
 	return counter;
 }
 
-int CountCharacters(char* str)
-{
-	int counter = 0;
-	while (*str != BSLSH_0)
-	{
-		counter++;
-		str++;
-	}
-	return counter;
-}
 
 
 
