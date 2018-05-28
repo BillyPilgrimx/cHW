@@ -41,6 +41,7 @@ void PrintGames(GAME games[], int* pngames); // helper function
 
 TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games);
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games);
+PrintNamesArray(char** names, int num_names); // helper function
 
 // Main
 void main()
@@ -52,9 +53,9 @@ void main()
 	all_games = ReadGames(&num_games);
 	PrintGames(all_games, num_games);
 
-	/*
 	table = FillTable(&num_teams, all_games, num_games);
 
+	/*
 	PrintTable(table, num_teams);
 	FreeAllGames(all_games, num_games);
 	FreeAllTeams(table, num_teams);
@@ -122,21 +123,70 @@ TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
 
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 {
-	TEAM* table;
-	char** names = NULL;
+	TEAM* table = NULL;
+	char** names = NULL; // dynamic array of names.
 	int num_names = 0;
+	int flag;
 
+	// this part creates a dynamic array of different names that appear in the games.
 	int i, j;
 	for (i = 0; i < num_games; i++)
 	{
-		
+		// checks the name of team1
+		flag = 1;
 		for (j = 0; j < num_names; j++)
-			if (strcmp(names[j], all_games[i].name1) != 0)
-			{
-				names = (char*)realloc(names, sizeof(char*) * (num_names + 1));
-			}
-		all_games[i].name1
+		{
+			if (strcmp(names[j], all_games[i].name1) == 0) // use of strcmp() to check if the name already exists in the array
+				flag = 0;
+		}
+		if (flag)
+		{
+			names = (char**)realloc(names, sizeof(char*) * (num_names + 1)); // memory realocation of the names array
+			names[num_names] = (char*)malloc(sizeof(char*)); // memory allocation for the name itself
+			strcpy(names[num_names], all_games[i].name1);
+			num_names++;
+		}
+
+		// checks the name of team2
+		flag = 1;
+		for (j = 0; j < num_names; j++)
+		{
+			if (strcmp(names[j], all_games[i].name2) == 0) // use of strcmp() to check if the name already exists in the array
+				flag = 0;
+		}
+		if (flag)
+		{
+			names = (char**)realloc(names, sizeof(char*) * (num_names + 1)); // memory realocation of the names array
+			names[num_names] = (char*)malloc(sizeof(char*)); // memory allocation for the name itself
+			strcpy(names[num_names], all_games[i].name2);
+			num_names++;
+		}
 	}
+
+	// *****************************************************************************************************************
+	PrintNamesArray(names, num_names);
+
+	for (i = 0; i < num_names; i++)
+	{
+		table = (TEAM*)realloc(table, sizeof(TEAM) * (*tsize + 1));
+		strcpy(table[*tsize].name, names[num_names]);
+	}
+	
+	// *****************************************************************************************************************
+
+
+
+	printf("******* End of function *******\n");
+}
+
+PrintNamesArray(char** names, int num_names) // helper function
+{
+	int i;
+	for (i = 0; i < num_names; i++)
+	{
+		puts(names[i]);
+	}
+	printf("\nThe nuber of names is: %d\n", num_names);
 }
 
 
