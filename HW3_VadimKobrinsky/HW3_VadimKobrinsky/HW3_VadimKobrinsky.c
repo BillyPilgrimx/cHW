@@ -41,8 +41,11 @@ void PrintGames(GAME games[], int* pngames); // helper function
 
 TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games);
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games);
-PrintNamesArray(char** names, int num_names); // helper function
 void PrintTable(TEAM* table, int num_teams);
+
+GAME_NODE* UpdateListOfGames(TEAM team, GAME game);
+GAME_NODE* FindTail(GAME_NODE* head);
+void PrintLinkedList(GAME_NODE* head);
 
 // Main
 void main()
@@ -104,13 +107,13 @@ GAME ReadGame()
 // helper function
 void PrintGames(GAME games[], int* pngames)
 {
+	printf("\nThese are all the games played: \n");
 	int i;
 	for (i = 0; i < pngames; i++)
 	{
-		printf("\nTeam1 Name: %s - goals: %d\n", games[i].name1, games[i].goals1);
-		printf("Team2 Name: %s - goals: %d\n", games[i].name2, games[i].goals2);
+		printf("\n%s  %d : %d  %s\n", games[i].name1, games[i].goals1, games[i].goals2, games[i].name2);
 	}
-	printf("\n");
+	printf("\n\n");
 }
 
 TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
@@ -127,6 +130,8 @@ TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
 
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 {
+	GAME_NODE* games = NULL;
+	GAME_NODE* tail = NULL;
 	TEAM* table = NULL;
 	char** names = NULL; // dynamic array of names.
 	int num_names = 0;
@@ -170,10 +175,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 		}
 	}
 
-	// helper function to print the different found names
-	PrintNamesArray(names, num_names);
-
-	for (i = 0; i < num_names; i++) // table initiation
+	for (i = 0; i < num_names; i++) // table initiation with names and zero values
 	{
 		table = (TEAM*)realloc(table, sizeof(TEAM) * (*tsize + 1));
 		strcpy(table[*tsize].name, names[i]);
@@ -181,21 +183,68 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 		table[*tsize].draws = 0;
 		table[*tsize].losses = 0;
 		table[*tsize].games_played = table[*tsize].wins + table[*tsize].draws + table[*tsize].losses;
-
+		table[*tsize].games = NULL;
+		
 		(*tsize)++;
 	}
 
-	return table;
-}
-
-PrintNamesArray(char** names, int num_names) // helper function
-{
-	int i;
-	for (i = 0; i < num_names; i++)
+	for (i = 0; i < num_games; i++)
 	{
-		puts(names[i]);
+		if (all_games[i].goals1 < all_games[i].goals2)
+		{
+			for (j = 0; j < *tsize; j++)
+			{
+				if (strcmp(table[j].name, all_games[i].name1) == 0)
+				{
+					table[j].losses++;
+					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
+				}
+
+				if (strcmp(table[j].name, all_games[i].name2) == 0)
+				{
+					table[j].wins++;
+					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
+				}
+			}
+		}
+
+		else if (all_games[i].goals1 == all_games[i].goals2)
+		{
+			for (j = 0; j < *tsize; j++)
+			{
+				if (strcmp(table[j].name, all_games[i].name1) == 0)
+				{
+					table[j].draws++;
+					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
+				}
+
+
+				if (strcmp(table[j].name, all_games[i].name2) == 0)
+				{
+					table[j].draws++;
+					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
+				}
+			}
+		}
+		else
+		{
+			for (j = 0; j < *tsize; j++)
+			{
+				if (strcmp(table[j].name, all_games[i].name1) == 0)
+				{
+					table[j].wins++;
+					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
+				}
+				if (strcmp(table[j].name, all_games[i].name2) == 0)
+				{
+					table[j].losses++;
+					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
+				}
+			}
+		}
 	}
-	printf("\nThe nuber of names is: %d\n", num_names);
+
+	return table;
 }
 
 void PrintTable(TEAM* table, int num_teams)
@@ -206,74 +255,68 @@ void PrintTable(TEAM* table, int num_teams)
 	for (i = 0; i < num_teams; i++)
 	{
 		printf(table[i].name);
-		printf("\b\t\t\t%d", table[i].games_played);
+		printf("\t\t\t%d", table[i].games_played);
 		printf("\t%d", table[i].wins);
 		printf("\t%d", table[i].draws);
 		printf("\t%d\n", table[i].losses);
+		
+		
+		while (table[i].games->next != NULL)
+		{
+			PrintLinkedList(table[i].games);
+		}
+		
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void tmpFunc()
+GAME_NODE* UpdateListOfGames(TEAM team, GAME game)
 {
+	GAME_NODE* head = team.games;
+	GAME_NODE* tail = FindTail(head);
 
-	GAME_NODE* head = NULL;
-	GAME_NODE* tail = NULL;
-	GAME inputGame;
+	if (team.games == NULL)
+	{	
+		team.games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 
-	if (head == NULL)
-	{
-		head = (GAME_NODE*)malloc(sizeof(GAME_NODE));
-		(*head).agame = inputGame;
-		head->next = NULL;
-		tail = head;
+		strcpy(team.games->agame.name1, game.name1);
+		strcpy(team.games->agame.name1, game.name2);
+
+		(team.games->agame).goals1 = game.goals1;
+		(team.games->agame).goals2 = game.goals2;
+
+		team.games->next = NULL;
+		tail = team.games->next;
 	}
 	else
 	{
 		tail->next = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 		tail = tail->next;
-		(*tail).agame = inputGame;
+
+
+		//tail->agame.goals1 = game.goals1;
 		tail->next = NULL;
 	}
+	return head;
 }
-*/
+
+GAME_NODE* FindTail(GAME_NODE* head)
+{
+	if (head == NULL)
+	{
+		return head;
+	}
+	else
+	{
+		return FindTail(head->next);
+	}
+}
+
+void PrintLinkedList(GAME_NODE* head)
+{
+	while (head != NULL)
+	{
+		printf("{%s %d : %d %s}\ --> ", head->agame.name1, head->agame.goals1, head->agame.goals2, head->agame.name2);
+	}
+}
+
+
