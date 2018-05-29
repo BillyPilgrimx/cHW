@@ -30,7 +30,7 @@ typedef struct team
 	int games_played;
 	int wins;
 	int draws;
-	int loses;
+	int losses;
 	GAME_NODE* games;
 } TEAM;
 
@@ -42,6 +42,7 @@ void PrintGames(GAME games[], int* pngames); // helper function
 TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games);
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games);
 PrintNamesArray(char** names, int num_names); // helper function
+void PrintTable(TEAM* table, int num_teams);
 
 // Main
 void main()
@@ -54,9 +55,9 @@ void main()
 	PrintGames(all_games, num_games);
 
 	table = FillTable(&num_teams, all_games, num_games);
+	PrintTable(table, num_teams);
 
 	/*
-	PrintTable(table, num_teams);
 	FreeAllGames(all_games, num_games);
 	FreeAllTeams(table, num_teams);
 	*/
@@ -118,6 +119,9 @@ TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
 	int tsize = 0;
 
 	table = PrepareTable(&tsize, all_games, num_games);
+	*pnum_teams = tsize;
+
+	return table;
 
 }
 
@@ -126,6 +130,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 	TEAM* table = NULL;
 	char** names = NULL; // dynamic array of names.
 	int num_names = 0;
+	int name_length;
 	int flag;
 
 	// this part creates a dynamic array of different names that appear in the games.
@@ -142,7 +147,8 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 		if (flag)
 		{
 			names = (char**)realloc(names, sizeof(char*) * (num_names + 1)); // memory realocation of the names array
-			names[num_names] = (char*)malloc(sizeof(char*)); // memory allocation for the name itself
+			name_length = strlen(all_games[i].name1) + 1;
+			names[num_names] = (char*)malloc(sizeof(name_length)); // memory allocation for the name itself
 			strcpy(names[num_names], all_games[i].name1);
 			num_names++;
 		}
@@ -157,26 +163,29 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 		if (flag)
 		{
 			names = (char**)realloc(names, sizeof(char*) * (num_names + 1)); // memory realocation of the names array
-			names[num_names] = (char*)malloc(sizeof(char*)); // memory allocation for the name itself
+			name_length = strlen(all_games[i].name2) + 1;
+			names[num_names] = (char*)malloc(sizeof(name_length)); // memory allocation for the name itself
 			strcpy(names[num_names], all_games[i].name2);
 			num_names++;
 		}
 	}
 
-	// *****************************************************************************************************************
+	// helper function to print the different found names
 	PrintNamesArray(names, num_names);
 
-	for (i = 0; i < num_names; i++)
+	for (i = 0; i < num_names; i++) // table initiation
 	{
 		table = (TEAM*)realloc(table, sizeof(TEAM) * (*tsize + 1));
-		strcpy(table[*tsize].name, names[num_names]);
+		strcpy(table[*tsize].name, names[i]);
+		table[*tsize].wins = 0;
+		table[*tsize].draws = 0;
+		table[*tsize].losses = 0;
+		table[*tsize].games_played = table[*tsize].wins + table[*tsize].draws + table[*tsize].losses;
+
+		(*tsize)++;
 	}
-	
-	// *****************************************************************************************************************
 
-
-
-	printf("******* End of function *******\n");
+	return table;
 }
 
 PrintNamesArray(char** names, int num_names) // helper function
@@ -187,6 +196,21 @@ PrintNamesArray(char** names, int num_names) // helper function
 		puts(names[i]);
 	}
 	printf("\nThe nuber of names is: %d\n", num_names);
+}
+
+void PrintTable(TEAM* table, int num_teams)
+{
+	printf("Team\t\t\tGP\tW\tD\tL\tList of games played\n\n");
+
+	int i;
+	for (i = 0; i < num_teams; i++)
+	{
+		printf(table[i].name);
+		printf("\b\t\t\t%d", table[i].games_played);
+		printf("\t%d", table[i].wins);
+		printf("\t%d", table[i].draws);
+		printf("\t%d\n", table[i].losses);
+	}
 }
 
 
