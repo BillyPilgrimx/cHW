@@ -170,7 +170,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games) // a function th
 		{
 			names = (char**)realloc(names, sizeof(char*) * (num_names + 1)); // memory realocation of the names array
 			name_length = strlen(all_games[i].name1) + 1;
-			names[num_names] = (char*)malloc(sizeof(name_length)); // memory allocation for the name itself
+			names[num_names] = (char*)malloc(sizeof(char) * name_length); // memory allocation for the name itself
 			strcpy(names[num_names], all_games[i].name1);
 			num_names++;
 		}
@@ -186,7 +186,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games) // a function th
 		{
 			names = (char**)realloc(names, sizeof(char*) * (num_names + 1)); // memory realocation of the names array
 			name_length = strlen(all_games[i].name2) + 1;
-			names[num_names] = (char*)malloc(sizeof(name_length)); // memory allocation for the name itself
+			names[num_names] = (char*)malloc(sizeof(char) * name_length); // memory allocation for the name itself
 			strcpy(names[num_names], all_games[i].name2);
 			num_names++;
 		}
@@ -202,8 +202,6 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games) // a function th
 		table[*tsize].games_played = table[*tsize].wins + table[*tsize].draws + table[*tsize].losses;
 		table[*tsize].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 		table[*tsize].games = NULL; // NULL means no games played yet
-
-
 		(*tsize)++;
 	}
 
