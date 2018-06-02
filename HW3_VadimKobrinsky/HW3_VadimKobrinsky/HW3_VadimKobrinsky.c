@@ -47,6 +47,9 @@ void UpdateListOfGames(GAME_NODE* head, GAME* game);
 GAME_NODE* FindTail(GAME_NODE* head);
 void PrintLinkedList(GAME_NODE* head);
 
+void FreeAllGames(GAME all_games[], int num_games);
+void FreeAllTeams(TEAM* table, int num_teams);
+
 // Main
 void main()
 {
@@ -60,10 +63,8 @@ void main()
 	table = FillTable(&num_teams, all_games, num_games);
 	PrintTable(table, num_teams);
 
-	/*
 	FreeAllGames(all_games, num_games);
 	FreeAllTeams(table, num_teams);
-	*/
 }
 
 GAME* ReadGames(int *pngames)
@@ -71,17 +72,31 @@ GAME* ReadGames(int *pngames)
 	GAME* games = NULL; // NULL is for the realloc()
 	GAME game;
 	char choice;
+	int flag = 1;
 
 	printf("Would you like to add a game? (y/n): ");
 	scanf(" %c", &choice);
-	while (choice == 'y')
+
+	while (flag == 1)
 	{
-		games = (GAME*)realloc(games, sizeof(GAME) * (*pngames + 1));
-		game = ReadGame();
-		games[*pngames] = game;
-		(*pngames)++;
-		printf("Would you like to add a game? (y/n): ");
-		scanf(" %c", &choice);
+		flag = 0;
+		if (choice == 'y')
+		{
+			flag = 1;
+			games = (GAME*)realloc(games, sizeof(GAME) * (*pngames + 1));
+			game = ReadGame();
+			games[*pngames] = game;
+			(*pngames)++;
+			printf("Would you like to add a game? (y/n): ");
+			scanf(" %c", &choice);
+		}
+		else if (choice != 'y' && choice != 'n')
+		{
+			flag = 1;
+			printf("Invalid input, try again...\n");
+			printf("Would you like to add a game? (y/n): ");
+			scanf(" %c", &choice);
+		}
 	}
 
 	return games;
@@ -133,11 +148,11 @@ TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
 	*pnum_teams = tsize;
 
 	return table;
-
 }
 
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 {
+
 	GAME_NODE* games = NULL;
 	GAME_NODE* tail = NULL;
 	TEAM* table = NULL;
@@ -183,7 +198,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 		}
 	}
 
-	for (i = 0; i < num_names; i++) // table initiation with names and zero values
+	for (i = 0; i < num_names; i++) // table initiation with names and zero values and .games as NULL
 	{
 		table = (TEAM*)realloc(table, sizeof(TEAM) * (*tsize + 1));
 		strcpy(table[*tsize].name, names[i]);
@@ -215,7 +230,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 						table[j].games->next = NULL;
 					}
 					else
-					UpdateListOfGames(table[j].games, &all_games[i]);
+						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 				if (strcmp(table[j].name, all_games[i].name2) == 0)
 				{
@@ -228,7 +243,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 						table[j].games->next = NULL;
 					}
 					else
-					UpdateListOfGames(table[j].games, &all_games[i]);
+						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 			}
 		}
@@ -371,6 +386,44 @@ void PrintLinkedList(GAME_NODE* head)
 	{
 		printf("{%s %d : %d %s} -> ", head->agame.name1, head->agame.goals1, head->agame.goals2, head->agame.name2);
 		PrintLinkedList(head->next);
+	}
+}
+
+void FreeAllGames(GAME all_games[], int num_games) // the names are static array, to create all_games I used realloc() 
+{												   // so there is only all_games[] to set free...									
+	if (num_games > 0)
+	{
+		free(all_games);
+		printf("\nAll games have been freed.");
+	}
+}
+
+void FreeAllTeams(TEAM* table, int num_teams)
+{
+	if (num_teams > 0)
+	{
+		GAME_NODE* head = NULL;
+		GAME_NODE* tmpHead = NULL;
+
+		int i;
+		for (i = 0; i < num_teams; i++)
+		{
+			head = ((&table[i])->games);
+
+			while (head->next != NULL)
+			{
+				tmpHead = head->next;
+				free(head);
+				head = tmpHead;
+				printf("\nTeam number %d a game been freed\n", i);
+			}
+			free(head);
+			printf("\nTeam number %d a game been freed\n", i);
+			
+		}
+
+		free(table);
+		printf("\nAll teams have been freed.\n");
 	}
 }
 
