@@ -38,15 +38,12 @@ typedef struct team
 GAME* ReadGames(int *pngames);
 GAME ReadGame();
 void PrintGames(GAME games[], int pngames); // helper function
-
 TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games);
 TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games);
 void PrintTable(TEAM* table, int num_teams);
-
-void UpdateListOfGames(GAME_NODE* head, GAME* game);
-GAME_NODE* FindTail(GAME_NODE* head);
-void PrintLinkedList(GAME_NODE* head);
-
+void UpdateListOfGames(GAME_NODE* head, GAME* game); // helper function
+GAME_NODE* FindTail(GAME_NODE* head); // helper function
+void PrintLinkedList(GAME_NODE* head); // helper function
 void FreeAllGames(GAME all_games[], int num_games);
 void FreeAllTeams(TEAM* table, int num_teams);
 
@@ -67,7 +64,7 @@ void main()
 	FreeAllTeams(table, num_teams);
 }
 
-GAME* ReadGames(int *pngames)
+GAME* ReadGames(int *pngames) // a function that manages the whole user input.
 {
 	GAME* games = NULL; // NULL is for the realloc()
 	GAME game;
@@ -77,7 +74,7 @@ GAME* ReadGames(int *pngames)
 	printf("Would you like to add a game? (y/n): ");
 	scanf(" %c", &choice);
 
-	while (flag == 1)
+	while (flag == 1) // incase of invalid input
 	{
 		flag = 0;
 		if (choice == 'y')
@@ -102,7 +99,7 @@ GAME* ReadGames(int *pngames)
 	return games;
 }
 
-GAME ReadGame()
+GAME ReadGame() // a function that manages the input of a single game.
 {
 	GAME game;
 
@@ -119,11 +116,8 @@ GAME ReadGame()
 	return game;
 }
 
-// helper function
-void PrintGames(GAME games[], int pngames)
+void PrintGames(GAME games[], int pngames) // a helper func that displayes all the games.
 {
-
-
 	if (pngames == 0)
 	{
 		printf("\nThere are no games played!\n\n");
@@ -139,8 +133,8 @@ void PrintGames(GAME games[], int pngames)
 	printf("\n\n");
 }
 
-TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
-{
+TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games) // a wraper function that executes PrepareTable() and updates
+{																  // the number of all teams.
 	TEAM* table;
 	int tsize = 0;
 
@@ -150,7 +144,7 @@ TEAM* FillTable(int *pnum_teams, GAME all_games[], int num_games)
 	return table;
 }
 
-TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
+TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games) // a function that manages the whole table.
 {
 
 	GAME_NODE* games = NULL;
@@ -207,7 +201,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 		table[*tsize].losses = 0;
 		table[*tsize].games_played = table[*tsize].wins + table[*tsize].draws + table[*tsize].losses;
 		table[*tsize].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
-		table[*tsize].games = NULL;
+		table[*tsize].games = NULL; // NULL means no games played yet
 
 
 		(*tsize)++;
@@ -215,7 +209,7 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 
 	for (i = 0; i < num_games; i++)
 	{
-		if (all_games[i].goals1 < all_games[i].goals2)
+		if (all_games[i].goals1 < all_games[i].goals2) // in case the score is A < B
 		{
 			for (j = 0; j < *tsize; j++)
 			{
@@ -223,32 +217,32 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 				{
 					table[j].losses++;
 					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
-					if (table[j].games == NULL)
+					if (table[j].games == NULL) // in case this is the first game of team A
 					{
 						table[j].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 						table[j].games->agame = all_games[i];
 						table[j].games->next = NULL;
 					}
-					else
+					else // not a first game
 						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 				if (strcmp(table[j].name, all_games[i].name2) == 0)
 				{
 					table[j].wins++;
 					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
-					if (table[j].games == NULL)
+					if (table[j].games == NULL) // in case this is the first game of team B
 					{
 						table[j].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 						table[j].games->agame = all_games[i];
 						table[j].games->next = NULL;
 					}
-					else
+					else // not a first game
 						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 			}
 		}
 
-		else if (all_games[i].goals1 == all_games[i].goals2)
+		else if (all_games[i].goals1 == all_games[i].goals2) // in case the score is A = B
 		{
 			for (j = 0; j < *tsize; j++)
 			{
@@ -256,13 +250,13 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 				{
 					table[j].draws++;
 					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
-					if (table[j].games == NULL)
+					if (table[j].games == NULL) // in case this is the first game of team A
 					{
 						table[j].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 						table[j].games->agame = all_games[i];
 						table[j].games->next = NULL;
 					}
-					else
+					else // not a first game
 						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 
@@ -271,18 +265,18 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 				{
 					table[j].draws++;
 					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
-					if (table[j].games == NULL)
+					if (table[j].games == NULL) // in case this is the first game of team B
 					{
 						table[j].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 						table[j].games->agame = all_games[i];
 						table[j].games->next = NULL;
 					}
-					else
+					else // not a first game
 						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 			}
 		}
-		else
+		else // in case the score is A > B
 		{
 			for (j = 0; j < *tsize; j++)
 			{
@@ -290,26 +284,26 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 				{
 					table[j].wins++;
 					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
-					if (table[j].games == NULL)
+					if (table[j].games == NULL) // in case this is the first game of team A
 					{
 						table[j].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 						table[j].games->agame = all_games[i];
 						table[j].games->next = NULL;
 					}
-					else
+					else // not a first game
 						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 				if (strcmp(table[j].name, all_games[i].name2) == 0)
 				{
 					table[j].losses++;
 					table[j].games_played = table[j].wins + table[j].draws + table[j].losses;
-					if (table[j].games == NULL)
+					if (table[j].games == NULL) // in case this is the first game of team B
 					{
 						table[j].games = (GAME_NODE*)malloc(sizeof(GAME_NODE));
 						table[j].games->agame = all_games[i];
 						table[j].games->next = NULL;
 					}
-					else
+					else // not a first game
 						UpdateListOfGames(table[j].games, &all_games[i]);
 				}
 			}
@@ -319,10 +313,9 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games)
 	return table;
 }
 
-void PrintTable(TEAM* table, int num_teams)
+void PrintTable(TEAM* table, int num_teams) // prints the table.
 {
 	printf("Team\t\t\tGP\tW\tD\tL\tList of games played\n\n");
-
 	int i;
 	for (i = 0; i < num_teams; i++)
 	{
@@ -332,22 +325,12 @@ void PrintTable(TEAM* table, int num_teams)
 		printf("\t%d", table[i].draws);
 		printf("\t%d\t", table[i].losses);
 		PrintLinkedList(table[i].games);
-
-
-
 	}
 }
 
-void UpdateListOfGames(GAME_NODE* head, GAME* game)
+void UpdateListOfGames(GAME_NODE* head, GAME* game) // a helper function that manages the linked list of games.
 {
-	/*
-	if (head == NULL)
-	{
-		head = (GAME_NODE*)malloc(sizeof(GAME_NODE));
-		head->agame = *game;
-		head->next = NULL;
-	}
-	*/
+	
 	if (head->next == NULL)
 	{
 		GAME_NODE* tmpTail = NULL;
@@ -364,7 +347,7 @@ void UpdateListOfGames(GAME_NODE* head, GAME* game)
 	}
 }
 
-GAME_NODE* FindTail(GAME_NODE* head)
+GAME_NODE* FindTail(GAME_NODE* head) // a recursive help func to find the last element in the linked list (used in UpdateListOfGames()).
 {
 	if (head->next == NULL)
 	{
@@ -376,7 +359,7 @@ GAME_NODE* FindTail(GAME_NODE* head)
 	}
 }
 
-void PrintLinkedList(GAME_NODE* head)
+void PrintLinkedList(GAME_NODE* head) // prints the 'List of games played' in the table, used in PrintTable().
 {
 	if (head->next == NULL)
 	{
@@ -398,7 +381,7 @@ void FreeAllGames(GAME all_games[], int num_games) // the names are static array
 	}
 }
 
-void FreeAllTeams(TEAM* table, int num_teams)
+void FreeAllTeams(TEAM* table, int num_teams) // frees all GAME_NODEs as well the whole table in the end. 
 {
 	if (num_teams > 0)
 	{
@@ -415,11 +398,8 @@ void FreeAllTeams(TEAM* table, int num_teams)
 				tmpHead = head->next;
 				free(head);
 				head = tmpHead;
-				printf("\nTeam number %d a game been freed\n", i);
 			}
 			free(head);
-			printf("\nTeam number %d a game been freed\n", i);
-			
 		}
 
 		free(table);
