@@ -313,12 +313,12 @@ TEAM* PrepareTable(int* tsize, GAME all_games[], int num_games) // a function th
 
 void PrintTable(TEAM* table, int num_teams) // prints the table.
 {
-	printf("Team\t\t\tGP\tW\tD\tL\tList of games played\n\n");
+	printf("Team\t\tGP\tW\tD\tL\tList of games played\n\n");
 	int i;
 	for (i = 0; i < num_teams; i++)
 	{
 		printf(table[i].name);
-		printf("\t\t\t%d", table[i].games_played);
+		printf("\t\t%d", table[i].games_played);
 		printf("\t%d", table[i].wins);
 		printf("\t%d", table[i].draws);
 		printf("\t%d\t", table[i].losses);
