@@ -111,11 +111,9 @@ void main()
 		exit(1);	// emergency exit
 	}
 
-	houses = ReadHouses(pf, houses);
-	roads = ReadRoads(pf, roads);
-	crossroads = CreateCrossRoads(roads, crossroads);
-
-
+	ReadHouses(pf, houses);
+	ReadRoads(pf, roads);
+	CreateCrossRoads(roads, crossroads);
 
 	fclose(pf);
 	WriteBitmap(OUT_FNAME, houses, roads, crossroads);
@@ -305,6 +303,60 @@ void AddCrossroad(unsigned char* bmp, CROSSROAD_NODE* crossroads)
 		{
 			AddHouse(bmp, crossroads->next);
 		}
+	}
+
+}
+
+void ReadHouses(FILE* pf, HOUSE_NODE* houses)
+{
+	char kind;
+	int tmp;
+
+	while (!feof(pf))
+	{
+		fscanf(pf, " %c", &kind);
+		if (kind == 'h')
+		{
+			if (houses == NULL)
+			{
+				houses = (CROSSROAD_NODE*)realloc(houses, sizeof(CROSSROAD_NODE));
+				houses->next = NULL;
+				fscanf(pf, "%d%d%d%d%d", houses->aHouse.cx, houses->aHouse.cy, houses->aHouse.height, houses->aHouse.width, houses->aHouse.houseType);
+				
+			}
+			else if (houses->next == NULL)
+			{
+				houses->next = (CROSSROAD_NODE*)realloc(houses, sizeof(CROSSROAD_NODE));
+				houses->next->next = NULL;
+				houses->next = houses;
+
+			}
+
+			switch (houses->aHouse.houseType)
+			{
+
+			case 1:
+				houses->aHouse.color.red = RES_HOUSE_R;
+				houses->aHouse.color.green = RES_HOUSE_G;
+				houses->aHouse.color.blue = RES_HOUSE_B;
+				break;
+
+			case 2:
+				houses->aHouse.color.red = COM_HOUSE_R;
+				houses->aHouse.color.green = COM_HOUSE_G;
+				houses->aHouse.color.blue = COM_HOUSE_B;
+				break;
+
+			case 3:
+				houses->aHouse.color.red = IND_HOUSE_R;
+				houses->aHouse.color.green = IND_HOUSE_G;
+				houses->aHouse.color.blue = IND_HOUSE_B;
+				break;
+			}
+
+			ReadHouses(pf, houses);
+		}
+
 	}
 
 }
